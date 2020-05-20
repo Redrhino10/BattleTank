@@ -42,3 +42,6 @@ DerivedDataCache/*
 
 # Custom removal of Content/StarterContent
 Content/StarterContent/*
+
+# Custom removal of Landscape UMAP, because its big
+Content/BattleGround.umap

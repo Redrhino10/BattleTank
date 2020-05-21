@@ -44,5 +44,6 @@ DerivedDataCache/*
 Content/StarterContent/*
 
 # Custom removal of Landscape UMAP, because its big
-Content/Levels/BattleGround.umap
-Content/UI/tankimage.uasset
+
+BattleTank/Content/UI/tankimage.uasset
+BattleTank/Content/Levels/BattleGround.umap

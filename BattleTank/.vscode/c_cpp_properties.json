@@ -3,6 +3,7 @@
         {
             "name": "UnrealEngine",
             "includePath": [
+                "${workspaceFolder}/**",
                 "C:\\Program Files\\Epic Games\\UE_4.24\\Engine\\Source",
                 "C:\\Users\\thoma\\OneDrive\\Documents\\Unreal Projects\\BattleTank\\BattleTank\\Source",
                 "C:\\Program Files\\Epic Games\\UE_4.24\\Engine\\Source\\Runtime",

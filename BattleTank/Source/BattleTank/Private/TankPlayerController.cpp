@@ -21,6 +21,13 @@ void ATankPlayerController::BeginPlay()
     }
 }
 
+void ATankPlayerController::Tick(float Deltatime) 
+{
+    Super::Tick(Deltatime);
+
+    UE_LOG(LogTemp, Warning, TEXT("Tick working"));
+}
+
 ATank* ATankPlayerController::GetControlledTank() const
 {
     return Cast<ATank>(GetPawn());

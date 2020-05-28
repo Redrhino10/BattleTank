@@ -19,5 +19,8 @@ class BATTLETANK_API ATankPlayerController : public APlayerController
 public:
 	ATank* GetControlledTank() const;
 
+	// The below two could be virtual, but not nessecary. 
+	// They are already virtual
 	void BeginPlay() override;
+	void Tick(float DeltaTime) override;
 };

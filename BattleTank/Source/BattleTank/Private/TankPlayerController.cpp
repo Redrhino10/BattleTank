@@ -19,6 +19,8 @@ void ATankPlayerController::BeginPlay()
     {
         UE_LOG(LogTemp, Warning, TEXT("A Player controller on %s"), *(ControlledTank->GetName()));
     }
+
+    UE_LOG(LogTemp, Error, TEXT("LineTraceRange = %f"), LineTraceRange);
 }
 
 void ATankPlayerController::Tick(float Deltatime) 
@@ -41,11 +43,11 @@ void ATankPlayerController::AimTowardsCrosshair()
     FVector HitLocation;
     if(GetSightRayHitLocation(HitLocation))
     {
-
+        UE_LOG(LogTemp, Warning, TEXT("Hit Location: %s"), *HitLocation.ToString());
     }
 
 
-    // UE_LOG(LogTemp, Warning, TEXT("Hit Location: %s"), *HitLocation.ToString());
+    // 
 }
 
 bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) const
@@ -66,17 +68,59 @@ bool ATankPlayerController::GetSightRayHitLocation(FVector& OutHitLocation) cons
     );
     // UE_LOG(LogTemp, Warning, TEXT("Screenlocation: %s"), *ScreenLocation.ToString());
     
-    FVector CameraWorldLocation, CameraWorldDirection;
-    if (DeprojectScreenPositionToWorld(
+    FVector LookDirection;
+    if (GetLookDirection(ScreenLocation, LookDirection))
+    {
+        GetLookVectorHitLocation(LookDirection, OutHitLocation);
+        //UE_LOG(LogTemp, Warning, TEXT("Look direction: %s"), *LookDirection.ToString());
+    }
+
+    return true;
+}
+
+bool ATankPlayerController::GetLookVectorHitLocation(FVector LookDirection, FVector& HitLocation) const
+{
+    FHitResult HitResult;
+    FVector StartLocation = PlayerCameraManager->GetCameraLocation();
+    FVector EndLocation = StartLocation + (LookDirection * LineTraceRange);
+
+    // Experimental line
+    FCollisionQueryParams CollisionParams;
+    CollisionParams.AddIgnoredActor(Cast<AActor>(GetPawn()));
+
+
+    if(GetWorld()->LineTraceSingleByChannel(
+        HitResult,
+        StartLocation,
+        EndLocation,
+        ECollisionChannel::ECC_Visibility,
+        CollisionParams)
+        )
+    {
+        HitLocation = HitResult.Location;
+        //UE_LOG(LogTemp, Warning, TEXT("HIT"));
+        return true;
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("%s\n, %s\n, %s\n, %s\n, %s\n"),
+        *HitResult.ToString(),
+        *HitResult.Location.ToString(),
+        *StartLocation.ToString(),
+        *EndLocation.ToString(),
+        *LookDirection.ToString());
+    }
+
+    return false;
+}
+
+bool ATankPlayerController::GetLookDirection(FVector2D ScreenLocation, FVector& LookDirection) const
+{
+    FVector CameraWorldLocation;    //To be discarded, apparently?
+    return DeprojectScreenPositionToWorld(
         ScreenLocation.X,
         ScreenLocation.Y,
         CameraWorldLocation,
-        CameraWorldDirection
-    ))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Look direction: %s"), *CameraWorldDirection.ToString());
-    }
-
-
-    return true;
+        LookDirection
+    );
 }
